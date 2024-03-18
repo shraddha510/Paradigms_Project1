@@ -1,6 +1,4 @@
 import Data.Char (isDigit)
-import Data.List
-import Data.Maybe (fromMaybe)
 
 -- Define a data type for arithmetic expressions
 data Expr = Number Double | Add Expr Expr | Multiply Expr Expr | Divide Expr Expr | Negate Expr
@@ -35,7 +33,9 @@ parseExpr history (x : xs)
       case maybeValue of
         Just value -> Right (Number value, remaining)
         Nothing -> Left InvalidInput
-  | isDigit x = Right (Number (read [x]), xs)
+  | isDigit x = do
+      let (num, remaining) = span isDigit (x : xs)
+      Right (Number (read num), remaining)
   | x == ' ' = parseExpr history xs
   | otherwise = Left UnrecognizedOperator
 parseExpr _ [] = Left InsufficientOperands
@@ -61,21 +61,16 @@ evaluate str history
 -- Function to handle user input and maintain history
 handleInput :: History -> IO ()
 handleInput history = do
-  putStrLn "Enter a prefix expression (e.g., + 2 / * 3 8 2):"
+  putStrLn "Enter a prefix expression (type 'exit' to exit):"
   expr <- getLine
-  if expr == "exit"
-    then putStrLn "Exiting..."
-    else do
-      case evaluate expr history of
-        Right (result, updatedHistory) -> do
-          putStrLn $ "Result (ID " ++ show (length updatedHistory) ++ "): " ++ show result
-          handleInput updatedHistory
-        Left InvalidInput -> do
-          putStrLn "Error: Invalid Expression"
-          handleInput history -- Prompt the user to enter the expression again
-        Left _ -> do
-          putStrLn "Error: Invalid Expression"
-          handleInput history -- Prompt the user to enter the expression again
+  case evaluate expr history of
+    Right (result, updatedHistory) -> do
+      putStrLn $ "Result (ID " ++ show (length updatedHistory) ++ "): " ++ show result
+      handleInput updatedHistory
+    Left InvalidInput -> putStrLn "Exiting..."
+    Left _ -> do
+      putStrLn "Error: Invalid Expression"
+      handleInput history
 
 main :: IO ()
 main = do
