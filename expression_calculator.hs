@@ -14,6 +14,7 @@ data Error = ExitProcess | DivisionByZero | UnrecognizedOperator | InsufficientO
 type History = [(Int, Double)]
 
 -- Function to parse a prefix expression
+-- Function to parse a prefix expression
 parseExpr :: History -> String -> Either Error (Expr, String)
 parseExpr history (' ' : xs) = parseExpr history xs -- Skip spaces
 parseExpr history (x : xs)
@@ -38,12 +39,16 @@ parseExpr history (x : xs)
   | x == '$' = do
       -- Extract the reference ID from the input string
       let (refId, remaining) = span isDigit xs
-      -- Look up the value corresponding to the ID in the history
-      let maybeValue = lookup (read refId :: Int) history
-      -- Return the value if found, otherwise indicate the error
-      case maybeValue of
-        Just value -> Right (Number value, remaining)
-        Nothing -> Left NoSuchHistoryId
+      -- If there are no digits following '$', indicate an invalid expression
+      if null refId
+        then Left UnrecognizedOperator
+        -- Look up the value corresponding to the ID in the history
+        else do
+          let maybeValue = lookup (read refId :: Int) history
+          -- Return the value if found, otherwise indicate the error
+          case maybeValue of
+            Just value -> Right (Number value, remaining)
+            Nothing -> Left NoSuchHistoryId
   | isDigit x = do
       -- Parse the number until a non-digit character is encountered
       let (num, remaining) = span isDigit (x : xs)
@@ -52,6 +57,7 @@ parseExpr history (x : xs)
   | otherwise = Left UnrecognizedOperator
 -- If the input string is empty, return an error for insufficient operands
 parseExpr _ [] = Left InsufficientOperands
+
 
 -- Function to evaluate an expression
 evalExpr :: Expr -> Double
