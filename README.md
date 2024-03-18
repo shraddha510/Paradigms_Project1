@@ -7,3 +7,9 @@ expression_calculator.hs
 This is the main haskell program which implements the prefix expression calculator.
 
 Project1_Writeup.pdf
+
+
+How to compile and run:
+
+
+Extra notes:
