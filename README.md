@@ -2,7 +2,7 @@
 CS 4337: Programming Language Paradigms Project 1
 
 Files included:
-- main.hs: Contains the Haskell code for the expression calculator.
+- expression_calculator.hs: Contains the Haskell code for the expression calculator.
 - README.txt: This file.
 - Writeup.pdf: Write-up document detailing the approach, organization, encountered problems, and learning outcomes.
 
