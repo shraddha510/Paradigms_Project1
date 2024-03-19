@@ -15,7 +15,7 @@ How to compile and run the project:
 
 Notes:
 - This program is designed to handle expressions written in prefix notation.
-- Ensure expressions are correctly formatted and valid, otherwise errors may occur. My program runs with expressions that contain spaces between the operands.
+- Ensure expressions are correctly formatted and valid, otherwise errors may occur. My program runs with expressions that contain spaces between numbers, otherwise whitespace is insignificant.
 - Use 'exit' to terminate the program.
-- Expressions without spaces between tokens may not be handled properly. Future improvements may address this limitation.
+
 
